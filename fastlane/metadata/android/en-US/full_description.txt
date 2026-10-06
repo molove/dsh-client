@@ -1,0 +1,15 @@
+dsh is a dedicated open-source Android companion client for dsh-web (DeepSeek Harness).
+
+It brings the desktop AI harness experience to mobile devices with a built-in, self-contained SSH tunnel, automatic authentication discovery, and mobile-responsive interface optimizations.
+
+Features:
+• Embedded SSH Tunnel: Built-in JSch tunnel running in an Android foreground service. Binds a local loopback port dynamically to your remote dsh-web instance. Supports modern OpenSSH Ed25519 and RSA keypairs with encrypted local credential storage via Android Keystore.
+• Automatic Token & Port Discovery: Automatically queries systemd service logs over SSH to extract dynamic authentication tokens and ports without requiring manual copy-pasting.
+• Resilient Background Keepalive: Foreground service with partial WakeLock support maintains connection integrity during long-running completions and streaming when your screen is off. Includes automated exponential backoff reconnection.
+• Host Key Verification (TOFU): Trust-On-First-Use host key fingerprint pinning protects against Man-In-The-Middle attacks with in-app controls to inspect or reset pinned keys.
+• Key Management: Built-in Ed25519 keypair generator with one-tap public key export, plus support for importing existing private keys from file or clipboard.
+• Mobile-Optimized Interface: Injects tailored responsive CSS to optimize navigation rails, dialog sheets, and plugin market views for touch screens in portrait and landscape orientations. Includes native Android back navigation support.
+
+Recommended Companion Tools:
+• Haven: Generate and deploy SSH keys to your remote server from your phone.
+• RethinkDNS+ or WireGuard: Secure remote access into your private network from mobile networks.
