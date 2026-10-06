@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Gradient -->
+    <radialGradient id="bgGrad" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#182238"/>
+      <stop offset="50%" stop-color="#0F1524"/>
+      <stop offset="100%" stop-color="#080C14"/>
+    </radialGradient>
+
+    <!-- Whale Gradient: Cyan to Electric Indigo -->
+    <linearGradient id="whaleBody" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="45%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#4F46E5"/>
+    </linearGradient>
+
+    <!-- Belly Gradient: Pale Ice Cyan -->
+    <linearGradient id="whaleBelly" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0F2FE"/>
+      <stop offset="100%" stop-color="#7DD3FC"/>
+    </linearGradient>
+
+    <!-- Ring/Harness Gradient: Electric Cyan / Neon Teal to Purple -->
+    <linearGradient id="harnessRing" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="30%" stop-color="#06B6D4"/>
+      <stop offset="70%" stop-color="#00F0FF"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="7" result="blur1"/>
+      <feGaussianBlur stdDeviation="2" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="512" height="512" rx="115" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Cyber Tech Coordinates / Concentric Rings -->
+  <circle cx="256" cy="256" r="175" fill="none" stroke="#1E293B" stroke-width="1.5" stroke-dasharray="4 8" opacity="0.6"/>
+  <circle cx="256" cy="256" r="130" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="6 6" opacity="0.4"/>
+
+  <!-- Terminal Prompt ">_" in Tech Cyan (top left within safe area) -->
+  <g transform="translate(130, 115)" filter="url(#softGlow)">
+    <path d="M 0 0 L 14 12 L 0 24" fill="none" stroke="#00F0FF" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="22" y1="24" x2="38" y2="24" stroke="#38BDF8" stroke-width="4.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- HARNESS RING - BACK SEGMENT -->
+  <ellipse cx="256" cy="265" rx="145" ry="62" fill="none" stroke="url(#harnessRing)" stroke-width="12" stroke-linecap="round" transform="rotate(-26 256 265)" stroke-dasharray="360 80" opacity="0.85" filter="url(#neonGlow)"/>
+
+  <!-- CYBER WHALE -->
+  <!-- Tail / Fluke -->
+  <path d="M 175 320 C 150 335, 120 358, 105 382 C 128 370, 158 350, 178 332 C 190 352, 212 372, 230 382 C 216 358, 198 334, 185 320 Z" fill="url(#whaleBody)"/>
+
+  <!-- Main Torso / Head -->
+  <path d="M 165 280 C 155 235, 190 175, 260 165 C 322 156, 375 195, 395 235 C 408 262, 388 295, 342 292 C 298 288, 245 330, 202 332 C 172 332, 160 305, 165 280 Z" fill="url(#whaleBody)"/>
+
+  <!-- Dorsal Fin / Tech Ridge -->
+  <path d="M 270 167 C 282 148, 298 140, 308 145 C 304 156, 296 166, 288 171 Z" fill="url(#whaleBody)"/>
+
+  <!-- Whale Underbelly / Pleats -->
+  <path d="M 205 322 C 242 322, 292 282, 342 287 C 370 290, 378 274, 382 256 C 346 274, 292 264, 238 286 C 202 301, 188 316, 205 322 Z" fill="url(#whaleBelly)"/>
+
+  <!-- Pectoral Fin -->
+  <path d="M 265 260 C 295 282, 310 326, 292 356 C 278 335, 270 304, 252 278 Z" fill="url(#whaleBody)"/>
+
+  <!-- Glowing Cyber Eye -->
+  <circle cx="365" cy="222" r="5.5" fill="#00F0FF" filter="url(#neonGlow)"/>
+  <circle cx="365" cy="222" r="2.5" fill="#FFFFFF"/>
+
+  <!-- HARNESS RING - FRONT OVERLAPPING SEGMENT -->
+  <ellipse cx="256" cy="265" rx="145" ry="62" fill="none" stroke="url(#harnessRing)" stroke-width="14" stroke-linecap="round" transform="rotate(-26 256 265)" stroke-dasharray="230 260" stroke-dashoffset="-190" filter="url(#neonGlow)"/>
+
+  <!-- Sparkle / Data Pulse on Ring -->
+  <circle cx="372" cy="210" r="4" fill="#FFFFFF" filter="url(#softGlow)"/>
+  <circle cx="145" cy="312" r="3" fill="#38BDF8" opacity="0.8" filter="url(#softGlow)"/>
+</svg>
