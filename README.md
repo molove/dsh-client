@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="docs/assets/icon.png" width="128" height="128" alt="dsh-client icon" />
+  <img src="docs/assets/icon.png" width="128" height="128" alt="Remote DSH Web icon" />
 </p>
 
-# dsh-client
+# Remote DSH Web
 
 A dedicated native Android companion client for [`dsh-web`](https://github.com/molove/dsh-web) (DeepSeek Harness).
 

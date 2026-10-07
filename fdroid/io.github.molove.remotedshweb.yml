@@ -8,14 +8,14 @@ SourceCode: https://github.com/molove/dsh-client
 IssueTracker: https://github.com/molove/dsh-client/issues
 Changelog: https://github.com/molove/dsh-client/releases
 
-AutoName: dsh
+AutoName: Remote DSH Web
 
 RepoType: git
 Repo: https://github.com/molove/dsh-client.git
 
 Builds:
-  - versionName: 1.0.1
-    versionCode: 2
+  - versionName: 1.0.2
+    versionCode: 3
     commit: 4837811fea10f374a4a8f88c3fcc6c3c27cecd01
     subdir: app
     gradle:
@@ -23,5 +23,5 @@ Builds:
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.1
-CurrentVersionCode: 2
+CurrentVersion: 1.0.2
+CurrentVersionCode: 3

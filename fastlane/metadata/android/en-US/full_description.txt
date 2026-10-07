@@ -1,4 +1,4 @@
-dsh is a dedicated open-source Android companion client for dsh-web (DeepSeek Harness).
+Remote DSH Web is a dedicated open-source Android companion client for dsh-web (DeepSeek Harness).
 
 It brings the desktop AI harness experience to mobile devices with a built-in, self-contained SSH tunnel, automatic authentication discovery, and mobile-responsive interface optimizations.
 
