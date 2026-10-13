@@ -53,6 +53,7 @@ object WebViewHelper {
             "div[class*=\"_panel\"] button[class*=\"_navCell\"] { width: 42px !important; height: 42px !important; padding: 8px !important; justify-content: center !important; gap: 0 !important; } " +
             "div[class*=\"_panel\"] div[class*=\"_content\"] { min-width: 0 !important; overflow-x: hidden !important; } " +
             "div[class*=\"_panel\"] div[class*=\"_options\"] { overflow-y: auto !important; min-height: 0 !important; padding: 0 12px 16px !important; } " +
+            "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 400px !important; } " +
             "@media (orientation: landscape) and (min-width: 600px) { " +
             "div[class*=\"_panel\"] { height: calc(100% - 8px) !important; max-height: calc(100% - 8px) !important; } " +
             "div[class*=\"_dialog\"][aria-label*=\"Workspace\"], div[class*=\"_dialog\"]:has(div[class*=\"_editorScope\"]) { height: calc(100% - 16px) !important; max-height: calc(100% - 16px) !important; } " +
@@ -63,6 +64,7 @@ object WebViewHelper {
             "div[class*=\"_panel\"] div[class*=\"_options\"] div[class*=\"_stickyHead\"] { position: static !important; } " +
             "div[class*=\"_panel\"] div[class*=\"_options\"] div[class*=\"_root\"] { height: auto !important; min-height: 100% !important; flex: none !important; } " +
             "div[class*=\"_panel\"] div[class*=\"_options\"] div[class*=\"_body\"] { height: auto !important; min-height: 350px !important; flex: none !important; overflow: visible !important; } " +
+            "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 260px !important; } " +
             "div[data-sidebar-right-panel=\"fullscreen\"][data-sidebar-right-open=\"true\"] { " +
             "position: fixed !important; top: 0 !important; bottom: 0 !important; right: 0 !important; left: auto !important; " +
             "width: 300px !important; max-width: 45vw !important; box-shadow: -4px 0 16px rgba(0,0,0,0.35) !important; " +
@@ -145,6 +147,9 @@ fun WebViewContainer(
                 settings.domStorageEnabled = true
                 @Suppress("DEPRECATION")
                 settings.databaseEnabled = true
+                settings.useWideViewPort = true
+                settings.loadWithOverviewMode = true
+                WebView.setWebContentsDebuggingEnabled(true)
                 CookieManager.getInstance().setAcceptCookie(true)
                 CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
 

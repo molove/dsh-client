@@ -21,6 +21,7 @@ class WebViewHelperTest {
         assertTrue(js.contains("div[class*=\"_frame\"] { height: 100% !important;"))
         assertTrue(js.contains("#root { position: fixed !important;"))
         assertTrue(js.contains("div[class*=\"_dialog\"][aria-label*=\"Workspace\"]"))
+        assertTrue(js.contains("div[data-step-process-body]"))
         assertTrue(js.contains("document.head.appendChild(style)"))
     }
 
