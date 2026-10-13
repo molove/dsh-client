@@ -34,4 +34,23 @@ class WebViewHelperTest {
         assertTrue(!js.contains("'\n"))
         assertTrue(js.contains("document.createElement('style')"))
     }
+
+    @Test
+    fun testBuildJsInjectionContainsCloseButtonLogic() {
+        val js = WebViewHelper.buildJsInjection()
+        assertTrue(js.contains(".dsh-mobile-close-btn"))
+        assertTrue(js.contains("attachCloseButtons"))
+        assertTrue(js.contains("MutationObserver"))
+        assertTrue(js.contains("key: 'Escape'"))
+        assertTrue(js.contains("code: 'Escape'"))
+        assertTrue(js.contains("keyCode: 27"))
+    }
+
+    @Test
+    fun testCssInjectionContainsCloseButtonAndDialogHeightRules() {
+        assertTrue(WebViewHelper.CSS_INJECTION.contains(".dsh-mobile-close-btn"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[role=\"dialog\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("height: auto !important"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("padding-right: 32px !important"))
+    }
 }

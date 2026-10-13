@@ -38,6 +38,15 @@ object WebViewHelper {
             "div[class*=\"_panel\"] { " +
             "height: min(720px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +
             "width: min(800px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; min-height: 260px !important; } " +
+            "[role=\"dialog\"]:not(:has(nav)):not(:has(div[class*=\"_editorScope\"])):not([data-shortcut-modal]) { " +
+            "height: auto !important; min-height: auto !important; max-height: calc(100% - 32px) !important; " +
+            "width: max-content !important; min-width: min(280px, calc(100vw - 24px)) !important; max-width: min(440px, calc(100vw - 24px)) !important; } " +
+            "[role=\"dialog\"] div[class*=\"_title\"], [role=\"dialog\"] div[class*=\"_header\"] { padding-right: 32px !important; } " +
+            ".dsh-mobile-close-btn { position: absolute !important; top: 8px !important; right: 8px !important; width: 28px !important; height: 28px !important; " +
+            "border-radius: 50% !important; border: none !important; background: rgba(128, 128, 128, 0.15) !important; color: currentColor !important; " +
+            "display: flex !important; align-items: center !important; justify-content: center !important; cursor: pointer !important; z-index: 1200 !important; " +
+            "padding: 0 !important; margin: 0 !important; opacity: 0.75 !important; -webkit-tap-highlight-color: transparent !important; } " +
+            ".dsh-mobile-close-btn:active { opacity: 1 !important; background: rgba(128, 128, 128, 0.3) !important; } " +
             "div[class*=\"_dialog\"][aria-label*=\"Workspace\"], div[class*=\"_dialog\"]:has(div[class*=\"_editorScope\"]), div[class*=\"_dialog\"]:has(div[class*=\"_millerRow\"]) { " +
             "height: min(520px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +
             "min-height: 280px !important; width: min(680px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; } " +
@@ -82,12 +91,72 @@ object WebViewHelper {
             .replace("\r", "")
             .replace("\n", "\\n")
         return """
-            var style = document.getElementById('dsh-mobile-style') || document.createElement('style');
-            style.id = 'dsh-mobile-style';
-            style.innerHTML = '$escapedCss';
-            if (!style.parentNode) {
-                document.head.appendChild(style);
-            }
+            (function() {
+                var style = document.getElementById('dsh-mobile-style') || document.createElement('style');
+                style.id = 'dsh-mobile-style';
+                style.innerHTML = '$escapedCss';
+                if (!style.parentNode && document.head) {
+                    document.head.appendChild(style);
+                }
+
+                function attachCloseButtons() {
+                    var dialogs = document.querySelectorAll('[role="dialog"]');
+                    for (var i = 0; i < dialogs.length; i++) {
+                        var dialog = dialogs[i];
+
+                        // Skip settings or workspace modals with navigation or editors
+                        if (dialog.querySelector('nav') || dialog.querySelector('div[class*="_editorScope"]')) {
+                            continue;
+                        }
+
+                        // Compact height override for popovers/stat panels so they do not stretch to 720px
+                        dialog.style.setProperty('height', 'auto', 'important');
+                        dialog.style.setProperty('min-height', 'auto', 'important');
+                        dialog.style.setProperty('max-height', 'calc(100% - 32px)', 'important');
+
+                        // If close button already exists, skip
+                        if (dialog.querySelector('.dsh-mobile-close-btn') || dialog.querySelector('button[aria-label="Close"]')) {
+                            continue;
+                        }
+
+                        var btn = document.createElement('button');
+                        btn.type = 'button';
+                        btn.className = 'dsh-mobile-close-btn';
+                        btn.setAttribute('aria-label', 'Close');
+                        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="2" y1="10" x2="10" y2="2"/></svg>';
+
+                        var dismiss = function(e) {
+                            if (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                            }
+                            document.dispatchEvent(new KeyboardEvent('keydown', {
+                                key: 'Escape',
+                                code: 'Escape',
+                                keyCode: 27,
+                                which: 27,
+                                bubbles: true,
+                                cancelable: true
+                            }));
+                        };
+
+                        btn.addEventListener('click', dismiss);
+                        btn.addEventListener('pointerup', dismiss);
+
+                        dialog.appendChild(btn);
+                    }
+                }
+
+                attachCloseButtons();
+
+                if (!window._dshCloseBtnObserver && document.body) {
+                    var observer = new MutationObserver(function() {
+                        attachCloseButtons();
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+                    window._dshCloseBtnObserver = observer;
+                }
+            })();
         """.trimIndent()
     }
 }
