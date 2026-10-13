@@ -228,6 +228,33 @@ class SshTunnelManagerTest {
     }
 
     @Test
+    fun connect_whenPreferredPortInUse_fallsBackToDynamicPort() {
+        val manager = SshTunnelManager(jschProvider = { mockJSch })
+        val scraperOutput = "http://127.0.0.1:3080/?token=scraped_token_xyz\n"
+        setupMockChannelExec(mockChannelExec, stdout = scraperOutput, exitStatus = 0)
+
+        doAnswer {
+            manager.activeTofuRepo?.check("192.0.2.1", sampleKeyBlob)
+            `when`(mockSession.isConnected).thenReturn(true)
+            null
+        }.`when`(mockSession).connect(anyInt())
+
+        // Preferred port fails with JSchException (port already in use)
+        `when`(mockSession.setPortForwardingL(3080, "127.0.0.1", 3080))
+            .thenThrow(com.jcraft.jsch.JSchException("PortForwardingL: local port 3080 is already taken"))
+        // Fallback to dynamic port allocation succeeds
+        `when`(mockSession.setPortForwardingL(0, "127.0.0.1", 3080)).thenReturn(41234)
+
+        val tunnelResult = manager.connect(validConfig)
+
+        assertEquals(41234, tunnelResult.port)
+        assertEquals("scraped_token_xyz", tunnelResult.token)
+        assertEquals("http://127.0.0.1:41234/?token=scraped_token_xyz", tunnelResult.url)
+        verify(mockSession).setPortForwardingL(0, "127.0.0.1", 3080)
+        assertEquals(41234, manager.getPortForward())
+    }
+
+    @Test
     fun connect_withTokenExtractionFailure_throwsTokenExtractionException() {
         val manager = SshTunnelManager(jschProvider = { mockJSch })
 

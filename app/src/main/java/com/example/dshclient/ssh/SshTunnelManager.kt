@@ -294,13 +294,18 @@ class SshTunnelManager(
 
         val (port, token) = parsed
 
-        try {
-            session.setPortForwardingL(port, "127.0.0.1", port)
-            activePortForward = port
-        } catch (e: Exception) {
-            disconnect()
-            throw e
+        val localPort = try {
+            val allocated = session.setPortForwardingL(port, "127.0.0.1", port)
+            if (allocated > 0) allocated else port
+        } catch (_: Exception) {
+            try {
+                session.setPortForwardingL(0, "127.0.0.1", port)
+            } catch (e: Exception) {
+                disconnect()
+                throw e
+            }
         }
+        activePortForward = localPort
 
         val capturedFp = tofuRepo.capturedFingerprint
             ?: session.hostKey?.let {
@@ -312,9 +317,9 @@ class SshTunnelManager(
             }
 
         return TunnelResult(
-            port = port,
+            port = localPort,
             token = token,
-            url = "http://127.0.0.1:$port/?token=$token",
+            url = "http://127.0.0.1:$localPort/?token=$token",
             hostKeyFingerprint = capturedFp
         )
     }
