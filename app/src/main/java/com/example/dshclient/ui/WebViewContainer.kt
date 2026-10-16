@@ -35,7 +35,7 @@ object WebViewHelper {
     const val CSS_INJECTION = "html, body { width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; } " +
             "#root { position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 100% !important; } " +
             "div[class*=\"_frame\"] { height: 100% !important; min-height: 100% !important; } " +
-            "div[class*=\"_panel\"] { " +
+            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]) { " +
             "height: min(720px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +
             "width: min(800px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; min-height: 260px !important; } " +
             "[role=\"dialog\"]:not(:has(nav)):not(:has(div[class*=\"_editorScope\"])):not([data-shortcut-modal]) { " +
@@ -65,8 +65,15 @@ object WebViewHelper {
             "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 400px !important; } " +
             "div[class*=\"_menu\"], [role=\"menu\"], div[class*=\"_list_4ub78\"], div[class*=\"_submenu_4ub78\"], div[class*=\"_scrollable_4ub78\"] { " +
             "max-height: min(380px, calc(100% - 48px)) !important; height: auto !important; min-height: auto !important; } " +
+            "@media (orientation: portrait), (max-width: 599px) { " +
+            "div[data-sidebar-right-panel][data-sidebar-right-open=\"true\"] { " +
+            "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; " +
+            "width: 100vw !important; max-width: 100vw !important; height: 100% !important; max-height: 100% !important; " +
+            "transform: none !important; z-index: 1000 !important; background: var(--dsw-alias-bg-base, #1e1e1e) !important; } " +
+            "div[data-sidebar-right-panel]:not([data-sidebar-right-open=\"true\"]) { display: none !important; } " +
+            "} " +
             "@media (orientation: landscape) and (min-width: 600px) { " +
-            "div[class*=\"_panel\"] { height: calc(100% - 8px) !important; max-height: calc(100% - 8px) !important; } " +
+            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]) { height: calc(100% - 8px) !important; max-height: calc(100% - 8px) !important; } " +
             "div[class*=\"_dialog\"][aria-label*=\"Workspace\"], div[class*=\"_dialog\"]:has(div[class*=\"_editorScope\"]) { height: calc(100% - 16px) !important; max-height: calc(100% - 16px) !important; } " +
             "[role=\"dialog\"] > nav, div[class*=\"_panel\"] nav[class*=\"_nav\"] { width: 188px !important; min-width: 188px !important; max-width: 188px !important; flex: 0 0 188px !important; padding: 22px 12px 0 !important; gap: 18px !important; } " +
             "div[class*=\"_panel\"] span[class*=\"_navLabel\"], div[class*=\"_panel\"] div[class*=\"_navTitle\"] { display: block !important; } " +
@@ -77,10 +84,14 @@ object WebViewHelper {
             "div[class*=\"_panel\"] div[class*=\"_options\"] div[class*=\"_body\"] { height: auto !important; min-height: 350px !important; flex: none !important; overflow: visible !important; } " +
             "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 260px !important; } " +
             "div[class*=\"_menu\"], [role=\"menu\"], div[class*=\"_list_4ub78\"], div[class*=\"_submenu_4ub78\"], div[class*=\"_scrollable_4ub78\"] { max-height: calc(100% - 24px) !important; } " +
-            "div[data-sidebar-right-panel=\"fullscreen\"][data-sidebar-right-open=\"true\"] { " +
-            "position: fixed !important; top: 0 !important; bottom: 0 !important; right: 0 !important; left: auto !important; " +
-            "width: 300px !important; max-width: 45vw !important; box-shadow: -4px 0 16px rgba(0,0,0,0.35) !important; " +
-            "transform: none !important; z-index: 50 !important; } " +
+            "div[class*=\"_frame\"]:has(div[data-sidebar-right-open=\"true\"]) { " +
+            "grid-template-columns: 56px minmax(0px, 1fr) min(320px, 40vw) !important; } " +
+            "div[class*=\"_rightbarCol\"]:has(div[data-sidebar-right-open=\"true\"]) { " +
+            "width: 100% !important; height: 100% !important; position: relative !important; overflow: hidden !important; } " +
+            "div[data-sidebar-right-panel][data-sidebar-right-open=\"true\"] { " +
+            "position: relative !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; " +
+            "width: 100% !important; max-width: 100% !important; height: 100% !important; max-height: 100% !important; " +
+            "transform: none !important; box-shadow: none !important; z-index: 10 !important; background: var(--dsw-alias-bg-base, #1e1e1e) !important; } " +
             "}"
 
     fun buildUrl(token: String, host: String = DEFAULT_HOST, port: Int = DEFAULT_PORT): String {
