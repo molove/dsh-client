@@ -65,6 +65,9 @@ object WebViewHelper {
             "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 400px !important; } " +
             "div[class*=\"_menu\"], [role=\"menu\"], div[class*=\"_list_4ub78\"], div[class*=\"_submenu_4ub78\"], div[class*=\"_scrollable_4ub78\"] { " +
             "max-height: min(380px, calc(100% - 48px)) !important; height: auto !important; min-height: auto !important; } " +
+            "div[class*=\"paneEmptyCards\"], div[class*=\"_paneEmptyCards\"] { " +
+            "overflow-y: auto !important; overflow-x: hidden !important; -webkit-overflow-scrolling: touch !important; " +
+            "overscroll-behavior: contain !important; min-height: 0 !important; padding-bottom: 24px !important; } " +
             "@media (orientation: portrait), (max-width: 599px) { " +
             "div[data-sidebar-right-panel][data-sidebar-right-open=\"true\"] { " +
             "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; " +

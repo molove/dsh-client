@@ -56,5 +56,6 @@ class WebViewHelperTest {
         assertTrue(WebViewHelper.CSS_INJECTION.contains("[role=\"menu\"]"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("div[data-sidebar-right-panel][data-sidebar-right-open=\"true\"]"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("grid-template-columns: 56px minmax(0px, 1fr) min(320px, 40vw)"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"paneEmptyCards\"]"))
     }
 }
