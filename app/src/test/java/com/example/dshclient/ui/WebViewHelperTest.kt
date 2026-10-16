@@ -52,5 +52,7 @@ class WebViewHelperTest {
         assertTrue(WebViewHelper.CSS_INJECTION.contains("[role=\"dialog\"]"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("height: auto !important"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("padding-right: 32px !important"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"_menu\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[role=\"menu\"]"))
     }
 }
