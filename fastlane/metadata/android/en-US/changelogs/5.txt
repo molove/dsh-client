@@ -1,0 +1,1 @@
+Mobile UX fixes: responsive sidebar, model selector and popup menus, thinking collapse fix, scrollable bottom cards, and dynamic SSH port allocation fallback.

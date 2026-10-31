@@ -1,7 +1,7 @@
 Categories:
+  - AI Chat
   - Connectivity
   - Development
-  - AI Chat
 License: MIT
 AuthorName: molove
 SourceCode: https://github.com/molove/dsh-client
@@ -16,12 +16,19 @@ Repo: https://github.com/molove/dsh-client.git
 Builds:
   - versionName: 1.0.3
     versionCode: 4
-    commit: PLACEHOLDER_COMMIT
+    commit: e385f5ce06627a3ff675b899926090925d3995b1
+    subdir: app
+    gradle:
+      - yes
+
+  - versionName: 1.0.4
+    versionCode: 5
+    commit: v1.0.4
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.3
-CurrentVersionCode: 4
+CurrentVersion: 1.0.4
+CurrentVersionCode: 5
