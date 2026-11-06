@@ -11,8 +11,8 @@ android {
         applicationId = "io.github.molove.remotedshweb"
         minSdk = 24
         targetSdk = 36
-        versionCode = 5
-        versionName = "1.0.4"
+        versionCode = 6
+        versionName = "1.0.5"
     }
 
     buildTypes {
