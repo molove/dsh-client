@@ -1,14 +1,19 @@
 package com.example.dshclient.ui
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.util.Log
 import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
+import android.webkit.PermissionRequest
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,13 +25,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 
 object WebViewHelper {
     private const val TAG = "WebViewContainer"
@@ -191,6 +200,22 @@ fun WebViewContainer(
     onCanGoBackChanged: ((Boolean) -> Unit)? = null,
     onRelease: (() -> Unit)? = null
 ) {
+    val context = LocalContext.current
+    var pendingPermissionRequest by remember { mutableStateOf<PermissionRequest?>(null) }
+
+    val recordAudioLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        pendingPermissionRequest?.let { req ->
+            if (isGranted) {
+                req.grant(arrayOf(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+            } else {
+                req.deny()
+            }
+        }
+        pendingPermissionRequest = null
+    }
+
     if (url.isNullOrBlank()) {
         Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
@@ -244,6 +269,34 @@ fun WebViewContainer(
                         Log.d("WebViewConsole", "${consoleMessage?.message()} -- From line ${consoleMessage?.lineNumber()} of ${consoleMessage?.sourceId()}")
                         return true
                     }
+
+                    override fun onPermissionRequest(request: PermissionRequest?) {
+                        if (request == null) return
+                        val hasAudio = request.resources?.contains(PermissionRequest.RESOURCE_AUDIO_CAPTURE) == true
+                        if (!hasAudio) {
+                            request.deny()
+                            return
+                        }
+
+                        val hasRecordAudioPermission = ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.RECORD_AUDIO
+                        ) == PackageManager.PERMISSION_GRANTED
+
+                        if (hasRecordAudioPermission) {
+                            request.grant(arrayOf(PermissionRequest.RESOURCE_AUDIO_CAPTURE))
+                        } else {
+                            pendingPermissionRequest = request
+                            recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                        }
+                    }
+
+                    override fun onPermissionRequestCanceled(request: PermissionRequest?) {
+                        super.onPermissionRequestCanceled(request)
+                        if (pendingPermissionRequest == request) {
+                            pendingPermissionRequest = null
+                        }
+                    }
                 }
 
                 webViewClient = object : WebViewClient() {
@@ -289,6 +342,8 @@ fun WebViewContainer(
             }
         },
         onRelease = { webView ->
+            pendingPermissionRequest?.deny()
+            pendingPermissionRequest = null
             webView.destroy()
             onRelease?.invoke()
         }
