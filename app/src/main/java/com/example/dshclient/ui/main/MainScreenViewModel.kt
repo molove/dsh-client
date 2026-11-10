@@ -3,6 +3,7 @@ package com.example.dshclient.ui.main
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.dshclient.data.SharePayload
 import com.example.dshclient.data.SshConfigRepository
 import com.example.dshclient.ssh.SshTunnelService
 import com.example.dshclient.ssh.TunnelState
@@ -49,6 +50,19 @@ class MainScreenViewModel(
         )
     )
     val uiState: StateFlow<MainScreenUiState> = _uiState.asStateFlow()
+
+    private val _pendingShare = MutableStateFlow<SharePayload?>(null)
+    val pendingShare: StateFlow<SharePayload?> = _pendingShare.asStateFlow()
+
+    fun setPendingShare(payload: SharePayload?) {
+        _pendingShare.value = payload
+    }
+
+    fun consumePendingShare(): SharePayload? {
+        val payload = _pendingShare.value
+        _pendingShare.value = null
+        return payload
+    }
 
     init {
         if (initialService != null) {

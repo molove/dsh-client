@@ -240,4 +240,18 @@ class MainScreenViewModelTest {
 
         assertEquals(TunnelState.Disconnected, viewModel.uiState.value.tunnelState)
     }
+
+    @Test
+    fun pendingShare_setAndConsume() = runTest(testDispatcher) {
+        val viewModel = MainScreenViewModel(mockConfigRepo, dispatcher = testDispatcher)
+        assertNull(viewModel.pendingShare.value)
+
+        val payload = com.example.dshclient.data.SharePayload.Text("Declutter test")
+        viewModel.setPendingShare(payload)
+        assertEquals(payload, viewModel.pendingShare.value)
+
+        val consumed = viewModel.consumePendingShare()
+        assertEquals(payload, consumed)
+        assertNull(viewModel.pendingShare.value)
+    }
 }

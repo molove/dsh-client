@@ -20,6 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModelProvider
+import com.example.dshclient.data.SharePayloadHelper
 import com.example.dshclient.data.SshConfigRepository
 import com.example.dshclient.data.TokenRepository
 import com.example.dshclient.ssh.SshTunnelService
@@ -143,6 +144,12 @@ class MainActivity : ComponentActivity() {
         val extractedToken = IntentParser.extractToken(intent)
         if (extractedToken != null) {
             tokenRepository.saveToken(extractedToken)
+        }
+
+        val sharePayload = SharePayloadHelper.parseIntent(this, intent)
+        if (sharePayload != null) {
+            SharePayloadHelper.copyToClipboard(this, sharePayload)
+            mainViewModel.setPendingShare(sharePayload)
         }
     }
 
