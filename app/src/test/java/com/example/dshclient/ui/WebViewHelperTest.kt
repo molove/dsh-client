@@ -47,6 +47,31 @@ class WebViewHelperTest {
     }
 
     @Test
+    fun testBuildShareInjectionJsForText() {
+        val payload = com.example.dshclient.data.SharePayload.Text("Box 12: Christmas Decorations")
+        val js = WebViewHelper.buildShareInjectionJs(payload)
+        assertTrue(js.contains("Box 12: Christmas Decorations"))
+        assertTrue(js.contains("document.querySelector('textarea, [contenteditable=\"true\"]')"))
+        assertTrue(js.contains("Event('input'"))
+        assertTrue(js.contains("Event('change'"))
+    }
+
+    @Test
+    fun testBuildShareInjectionJsForImage() {
+        val payload = com.example.dshclient.data.SharePayload.Image(
+            mimeType = "image/jpeg",
+            base64Data = "aGVsbG8=",
+            filename = "declutter_1.jpg"
+        )
+        val js = WebViewHelper.buildShareInjectionJs(payload)
+        assertTrue(js.contains("aGVsbG8="))
+        assertTrue(js.contains("declutter_1.jpg"))
+        assertTrue(js.contains("ClipboardEvent('paste'"))
+        assertTrue(js.contains("base64ToBlob"))
+        assertTrue(js.contains("dt.items.add"))
+    }
+
+    @Test
     fun testCssInjectionContainsCloseButtonAndDialogHeightRules() {
         assertTrue(WebViewHelper.CSS_INJECTION.contains(".dsh-mobile-close-btn"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("[role=\"dialog\"]"))
