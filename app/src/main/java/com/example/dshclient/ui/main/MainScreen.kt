@@ -1,6 +1,7 @@
 package com.example.dshclient.ui.main
 
 import android.webkit.WebView
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,7 +38,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.dshclient.data.SharePayload
 import com.example.dshclient.data.SshConfigRepository
+import com.example.dshclient.ui.WebViewHelper
 import com.example.dshclient.ssh.TunnelState
 import com.example.dshclient.theme.DshClientTheme
 import com.example.dshclient.ui.WebViewContainer
@@ -56,13 +59,33 @@ fun MainScreen(
     modifier: Modifier = Modifier
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val pendingShare by viewModel.pendingShare.collectAsStateWithLifecycle()
     var webViewInstance by remember { mutableStateOf<WebView?>(null) }
+    var isPageLoaded by remember { mutableStateOf(false) }
     var canGoBack by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     LaunchedEffect(state.url) {
         if (state.url.isNullOrBlank()) {
             webViewInstance = null
             canGoBack = false
+            isPageLoaded = false
+        }
+    }
+
+    LaunchedEffect(pendingShare, isPageLoaded, webViewInstance) {
+        val payload = pendingShare
+        val wv = webViewInstance
+        if (payload != null && isPageLoaded && wv != null) {
+            val js = WebViewHelper.buildShareInjectionJs(payload)
+            wv.evaluateJavascript(js, null)
+            viewModel.consumePendingShare()
+            val toastMessage = when (payload) {
+                is SharePayload.Text -> "Shared note to Q"
+                is SharePayload.Image -> "Shared photo to Q"
+                is SharePayload.MultipleImages -> "Shared ${payload.images.size} photos to Q"
+            }
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -225,9 +248,13 @@ fun MainScreen(
                     url = state.url,
                     onWebViewCreated = { webViewInstance = it },
                     onCanGoBackChanged = { canGoBack = it },
+                    onPageFinished = {
+                        isPageLoaded = true
+                    },
                     onRelease = {
                         webViewInstance = null
                         canGoBack = false
+                        isPageLoaded = false
                     }
                 )
             }

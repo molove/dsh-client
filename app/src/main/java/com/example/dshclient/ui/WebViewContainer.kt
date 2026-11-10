@@ -36,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.example.dshclient.data.SharePayload
 
 object WebViewHelper {
     private const val TAG = "WebViewContainer"
@@ -185,6 +186,107 @@ object WebViewHelper {
             })();
         """.trimIndent()
     }
+
+    fun buildShareInjectionJs(payload: SharePayload): String {
+        return when (payload) {
+            is SharePayload.Text -> {
+                val escapedText = payload.content
+                    .replace("\\", "\\\\")
+                    .replace("'", "\\'")
+                    .replace("\"", "\\\"")
+                    .replace("\r", "")
+                    .replace("\n", "\\n")
+                """
+                (function() {
+                    function injectText() {
+                        var target = document.querySelector('textarea, [contenteditable="true"]') || document.activeElement;
+                        if (!target || target === document.body) {
+                            if (!window.__shareRetryCount) window.__shareRetryCount = 0;
+                            if (window.__shareRetryCount < 10) {
+                                window.__shareRetryCount++;
+                                setTimeout(injectText, 250);
+                                return;
+                            }
+                        }
+                        window.__shareRetryCount = 0;
+                        if (!target) return;
+                        target.focus();
+                        var text = "$escapedText";
+                        if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') {
+                            var start = target.selectionStart || target.value.length;
+                            var end = target.selectionEnd || target.value.length;
+                            target.value = target.value.substring(0, start) + text + target.value.substring(end);
+                            target.selectionStart = target.selectionEnd = start + text.length;
+                            target.dispatchEvent(new Event('input', { bubbles: true }));
+                            target.dispatchEvent(new Event('change', { bubbles: true }));
+                        } else if (target.isContentEditable) {
+                            document.execCommand('insertText', false, text);
+                        }
+                    }
+                    injectText();
+                })();
+                """.trimIndent()
+            }
+            is SharePayload.Image -> {
+                buildImageInjectionJs(listOf(payload))
+            }
+            is SharePayload.MultipleImages -> {
+                buildImageInjectionJs(payload.images)
+            }
+        }
+    }
+
+    private fun buildImageInjectionJs(images: List<SharePayload.Image>): String {
+        val filesBuilder = StringBuilder()
+        images.forEachIndexed { index, img ->
+            val b64 = img.base64Data
+            val mime = img.mimeType
+            val name = img.filename
+            filesBuilder.append("""
+                var b64_$index = "$b64";
+                var blob_$index = base64ToBlob(b64_$index, "$mime");
+                dt.items.add(new File([blob_$index], "$name", { type: "$mime" }));
+            """.trimIndent()).append("\n")
+        }
+
+        return """
+        (function() {
+            function base64ToBlob(b64, type) {
+                var bin = atob(b64);
+                var len = bin.length;
+                var arr = new Uint8Array(len);
+                for (var i = 0; i < len; i++) {
+                    arr[i] = bin.charCodeAt(i);
+                }
+                return new Blob([arr], { type: type });
+            }
+
+            function injectImages() {
+                var target = document.querySelector('textarea, [contenteditable="true"]') || document.activeElement;
+                if (!target || target === document.body) {
+                    if (!window.__shareImgRetryCount) window.__shareImgRetryCount = 0;
+                    if (window.__shareImgRetryCount < 10) {
+                        window.__shareImgRetryCount++;
+                        setTimeout(injectImages, 250);
+                        return;
+                    }
+                }
+                window.__shareImgRetryCount = 0;
+                var dt = new DataTransfer();
+                $filesBuilder
+                var pasteEvent = new ClipboardEvent('paste', {
+                    bubbles: true,
+                    cancelable: true,
+                    clipboardData: dt
+                });
+                var el = target || document.body;
+                el.focus();
+                el.dispatchEvent(pasteEvent);
+            }
+            injectImages();
+        })();
+        """.trimIndent()
+    }
 }
 
 /**
@@ -198,6 +300,7 @@ fun WebViewContainer(
     modifier: Modifier = Modifier,
     onWebViewCreated: ((WebView) -> Unit)? = null,
     onCanGoBackChanged: ((Boolean) -> Unit)? = null,
+    onPageFinished: ((WebView) -> Unit)? = null,
     onRelease: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
@@ -305,6 +408,7 @@ fun WebViewContainer(
                         val js = WebViewHelper.buildJsInjection()
                         view?.evaluateJavascript(js, null)
                         onCanGoBackChanged?.invoke(view?.canGoBack() == true)
+                        view?.let { onPageFinished?.invoke(it) }
                     }
 
                     override fun doUpdateVisitedHistory(
