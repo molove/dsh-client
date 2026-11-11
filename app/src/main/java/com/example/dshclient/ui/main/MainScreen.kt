@@ -3,14 +3,18 @@ package com.example.dshclient.ui.main
 import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -34,18 +38,57 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.dshclient.data.SharePayload
 import com.example.dshclient.data.SshConfigRepository
 import com.example.dshclient.ui.WebViewHelper
 import com.example.dshclient.ssh.TunnelState
+import kotlinx.coroutines.delay
 import com.example.dshclient.theme.DshClientTheme
 import com.example.dshclient.ui.WebViewContainer
 import com.example.dshclient.ui.components.DshTopBar
+
+/**
+ * Tracks the software keyboard (IME) bottom padding, debouncing transient 0dp drops
+ * that occur during IME sub-mode switches (e.g. from Voice Typing to QWERTY keyboard)
+ * and smoothly animating transitions with zero bounce.
+ */
+@Composable
+private fun rememberDebouncedImePadding(): Dp {
+    val density = LocalDensity.current
+    val currentImeBottomPx = WindowInsets.ime.getBottom(density)
+    val currentImeBottomDp = with(density) { currentImeBottomPx.toDp() }
+
+    var stableImeBottomDp by remember { mutableStateOf(currentImeBottomDp) }
+
+    LaunchedEffect(currentImeBottomDp) {
+        if (currentImeBottomDp > 0.dp) {
+            stableImeBottomDp = currentImeBottomDp
+        } else {
+            // Swallow transient 0dp glitch during keyboard mode switching
+            delay(150)
+            stableImeBottomDp = 0.dp
+        }
+    }
+
+    val animatedPadding by animateDpAsState(
+        targetValue = stableImeBottomDp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMedium
+        ),
+        label = "DebouncedImePadding"
+    )
+
+    return animatedPadding
+}
 
 /**
  * Main application screen integrating DshTopBar, SshTunnelService state banners,
@@ -61,6 +104,7 @@ fun MainScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val pendingShare by viewModel.pendingShare.collectAsStateWithLifecycle()
+    val debouncedImePadding = rememberDebouncedImePadding()
     var webViewInstance by remember { mutableStateOf<WebView?>(null) }
     var isPageLoaded by remember { mutableStateOf(false) }
     var canGoBack by remember { mutableStateOf(false) }
@@ -99,9 +143,7 @@ fun MainScreen(
     }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .imePadding(),
+        modifier = modifier.fillMaxSize(),
         topBar = {
             DshTopBar(
                 tunnelState = state.tunnelState,
@@ -116,10 +158,14 @@ fun MainScreen(
             )
         }
     ) { innerPadding ->
+        val bottomPadding = max(innerPadding.calculateBottomPadding(), debouncedImePadding)
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(
+                    top = innerPadding.calculateTopPadding(),
+                    bottom = bottomPadding
+                )
         ) {
             // Reconnecting Banner
             if (state.tunnelState is TunnelState.Reconnecting) {
