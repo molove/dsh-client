@@ -1,0 +1,1 @@
+Added Android system share target for text and photos into active DSH prompt. Fixed screen judder and viewport bounce during text editing and voice-to-keyboard switching.
