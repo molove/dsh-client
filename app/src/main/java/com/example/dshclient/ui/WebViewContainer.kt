@@ -42,8 +42,9 @@ object WebViewHelper {
     private const val TAG = "WebViewContainer"
     const val DEFAULT_HOST = "127.0.0.1"
     const val DEFAULT_PORT = 3080
-    const val CSS_INJECTION = "html, body { width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; } " +
+    const val CSS_INJECTION = "html, body { width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; overscroll-behavior: none !important; -webkit-overscroll-behavior: none !important; } " +
             "#root { position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 100% !important; } " +
+            "div[class*=\"_scrollBody\"] { overscroll-behavior: contain !important; -webkit-overflow-scrolling: touch !important; } " +
             "div[class*=\"_frame\"] { height: 100% !important; min-height: 100% !important; } " +
             "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]) { " +
             "height: min(720px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +
@@ -119,11 +120,28 @@ object WebViewHelper {
             .replace("\n", "\\n")
         return """
             (function() {
+                var mv = document.querySelector('meta[name="viewport"]');
+                if (!mv) {
+                    mv = document.createElement('meta');
+                    mv.name = 'viewport';
+                    document.head.appendChild(mv);
+                }
+                mv.content = 'width=device-width, initial-scale=1, interactive-widget=resizes-content';
+
                 var style = document.getElementById('dsh-mobile-style') || document.createElement('style');
                 style.id = 'dsh-mobile-style';
                 style.innerHTML = '$escapedCss';
                 if (!style.parentNode && document.head) {
                     document.head.appendChild(style);
+                }
+
+                if (!window._dshScrollLock) {
+                    window.addEventListener('scroll', function() {
+                        if (window.scrollY !== 0 || window.scrollX !== 0) {
+                            window.scrollTo(0, 0);
+                        }
+                    }, { passive: true });
+                    window._dshScrollLock = true;
                 }
 
                 function attachCloseButtons() {
@@ -357,6 +375,9 @@ fun WebViewContainer(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
             WebView(context).apply {
+                overScrollMode = android.view.View.OVER_SCROLL_NEVER
+                isVerticalScrollBarEnabled = false
+                isHorizontalScrollBarEnabled = false
                 settings.javaScriptEnabled = true
                 settings.domStorageEnabled = true
                 @Suppress("DEPRECATION")
