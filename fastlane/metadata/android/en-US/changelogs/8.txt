@@ -1,0 +1,1 @@
+Fix Settings page layout breakdown under dsh 0.2.2: adapt modal overlay, horizontal navigation tabs, and scrollable options for mobile viewports.
