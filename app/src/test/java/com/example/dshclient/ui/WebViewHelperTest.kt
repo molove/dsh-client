@@ -83,4 +83,14 @@ class WebViewHelperTest {
         assertTrue(WebViewHelper.CSS_INJECTION.contains("grid-template-columns: 56px minmax(0px, 1fr) min(320px, 40vw)"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"paneEmptyCards\"]"))
     }
+
+    @Test
+    fun testCssInjectionContainsSettingsModalRules() {
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"VOzbGW_overlay\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"VOzbGW_panel\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"VOzbGW_navList\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("button[class*=\"VOzbGW_navCell\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"VOzbGW_options\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("span[class*=\"VOzbGW_navLabel\"]"))
+    }
 }

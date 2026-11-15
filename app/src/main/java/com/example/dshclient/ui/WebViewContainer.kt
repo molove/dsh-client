@@ -46,7 +46,9 @@ object WebViewHelper {
             "#root { position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 100% !important; } " +
             "div[class*=\"_scrollBody\"] { overscroll-behavior: contain !important; -webkit-overflow-scrolling: touch !important; } " +
             "div[class*=\"_frame\"] { height: 100% !important; min-height: 100% !important; } " +
-            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]) { " +
+            "div[class*=\"_overlay\"], div[class*=\"VOzbGW_overlay\"], html:not([data-windows-titlebar]):not([data-platform=\"darwin\"]) div[class*=\"_overlay\"] { " +
+            "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: auto !important; height: auto !important; inset: 0 !important; z-index: 1000 !important; display: flex !important; align-items: stretch !important; justify-content: stretch !important; } " +
+            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]):not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) { " +
             "height: min(720px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +
             "width: min(800px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; min-height: 260px !important; } " +
             "[role=\"dialog\"]:not(:has(nav)):not(:has(div[class*=\"_editorScope\"])):not([data-shortcut-modal]) { " +
@@ -63,15 +65,15 @@ object WebViewHelper {
             "min-height: 280px !important; width: min(680px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; } " +
             "div[class*=\"_editorScope\"] { height: 100% !important; min-height: 0 !important; display: flex !important; flex-direction: column !important; } " +
             "div[class*=\"_millerRow\"] { flex: 1 1 auto !important; min-height: 0 !important; overflow-y: auto !important; } " +
-            "[role=\"dialog\"] > nav, div[class*=\"_panel\"] nav[class*=\"_nav\"] { " +
+            "[role=\"dialog\"]:not([data-shortcut-modal=\"settings\"]):not(:has([class*=\"VOzbGW\"])) > nav, div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) nav[class*=\"_nav\"] { " +
             "display: flex !important; width: 54px !important; min-width: 54px !important; max-width: 54px !important; " +
             "flex: 0 0 54px !important; flex-shrink: 0 !important; min-height: 0 !important; max-height: 100% !important; " +
             "overflow-y: auto !important; box-sizing: border-box !important; padding: 14px 6px 0 !important; gap: 8px !important; } " +
             "[role=\"dialog\"]:has([data-dsh-market-root]) > div { flex: 1 1 auto !important; width: auto !important; min-width: 0 !important; } " +
-            "div[class*=\"_panel\"] div[class*=\"_navList\"] { min-height: 0 !important; overflow-y: auto !important; flex: 1 1 auto !important; } " +
-            "div[class*=\"_panel\"] span[class*=\"_navLabel\"], div[class*=\"_panel\"] div[class*=\"_navTitle\"] { display: none !important; } " +
-            "div[class*=\"_panel\"] button[class*=\"_navCell\"] { width: 42px !important; height: 42px !important; padding: 8px !important; justify-content: center !important; gap: 0 !important; } " +
-            "div[class*=\"_panel\"] div[class*=\"_content\"] { min-width: 0 !important; overflow-x: hidden !important; } " +
+            "div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) div[class*=\"_navList\"] { min-height: 0 !important; overflow-y: auto !important; flex: 1 1 auto !important; } " +
+            "div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) span[class*=\"_navLabel\"], div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) div[class*=\"_navTitle\"] { display: none !important; } " +
+            "div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) button[class*=\"_navCell\"] { width: 42px !important; height: 42px !important; padding: 8px !important; justify-content: center !important; gap: 0 !important; } " +
+            "div[class*=\"_panel\"]:not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) div[class*=\"_content\"] { min-width: 0 !important; overflow-x: hidden !important; } " +
             "div[class*=\"_panel\"] div[class*=\"_options\"] { overflow-y: auto !important; min-height: 0 !important; padding: 0 12px 16px !important; } " +
             "div[data-step-process-body], div[class*=\"_body\"][data-step-process-body], .O_Ebla_body { max-height: 400px !important; } " +
             "div[class*=\"_menu\"], [role=\"menu\"], div[class*=\"_list_4ub78\"], div[class*=\"_submenu_4ub78\"], div[class*=\"_scrollable_4ub78\"] { " +
@@ -85,9 +87,18 @@ object WebViewHelper {
             "width: 100vw !important; max-width: 100vw !important; height: 100% !important; max-height: 100% !important; " +
             "transform: none !important; z-index: 1000 !important; background: var(--dsw-alias-bg-base, #1e1e1e) !important; } " +
             "div[data-sidebar-right-panel]:not([data-sidebar-right-open=\"true\"]) { display: none !important; } " +
+            "div[class*=\"_panel\"][data-shortcut-modal=\"settings\"], div[class*=\"VOzbGW_panel\"] { " +
+            "width: 100% !important; max-width: 100% !important; height: 100% !important; max-height: 100% !important; min-height: 100% !important; border-radius: 0 !important; margin: 0 !important; display: grid !important; grid-template: \"VOzbGW_title VOzbGW_header\" \"VOzbGW_nav VOzbGW_nav\" \"VOzbGW_options VOzbGW_options\" minmax(0, 1fr) / minmax(0, 1fr) auto !important; } " +
+            "div[class*=\"_panel\"][data-shortcut-modal=\"settings\"] nav, div[class*=\"VOzbGW_panel\"] nav, div[class*=\"VOzbGW_nav\"] { " +
+            "width: 100% !important; min-width: 100% !important; max-width: 100% !important; flex: none !important; padding: 0 !important; display: flex !important; } " +
+            "div[class*=\"VOzbGW_navList\"] { display: flex !important; flex-direction: row !important; gap: 4px !important; padding: 8px 16px !important; overflow-x: auto !important; overflow-y: hidden !important; min-height: auto !important; width: 100% !important; } " +
+            "button[class*=\"VOzbGW_navCell\"] { flex: 0 0 auto !important; width: auto !important; min-width: max-content !important; height: 36px !important; padding: 0 12px !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; } " +
+            "div[class*=\"VOzbGW_panel\"] span[class*=\"_navLabel\"], div[class*=\"VOzbGW_panel\"] span[class*=\"VOzbGW_navLabel\"], div[class*=\"VOzbGW_navTitle\"] { display: block !important; } " +
+            "div[class*=\"VOzbGW_options\"] { overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; min-height: 0 !important; padding: 0 16px 24px !important; } " +
             "} " +
             "@media (orientation: landscape) and (min-width: 600px) { " +
-            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]) { height: calc(100% - 8px) !important; max-height: calc(100% - 8px) !important; } " +
+            "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]):not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) { height: calc(100% - 8px) !important; max-height: calc(100% - 8px) !important; } " +
+            "div[class*=\"_panel\"][data-shortcut-modal=\"settings\"], div[class*=\"VOzbGW_panel\"] { width: min(800px, calc(100% - 24px)) !important; max-width: calc(100% - 24px) !important; height: calc(100% - 16px) !important; max-height: calc(100% - 16px) !important; border-radius: var(--dsw-radius-panel) !important; margin: auto !important; display: grid !important; grid-template: \"VOzbGW_title VOzbGW_header\" \"VOzbGW_nav VOzbGW_options\" minmax(0, 1fr) / 188px minmax(0, 1fr) !important; } " +
             "div[class*=\"_dialog\"][aria-label*=\"Workspace\"], div[class*=\"_dialog\"]:has(div[class*=\"_editorScope\"]) { height: calc(100% - 16px) !important; max-height: calc(100% - 16px) !important; } " +
             "[role=\"dialog\"] > nav, div[class*=\"_panel\"] nav[class*=\"_nav\"] { width: 188px !important; min-width: 188px !important; max-width: 188px !important; flex: 0 0 188px !important; padding: 22px 12px 0 !important; gap: 18px !important; } " +
             "div[class*=\"_panel\"] span[class*=\"_navLabel\"], div[class*=\"_panel\"] div[class*=\"_navTitle\"] { display: block !important; } " +
@@ -150,7 +161,7 @@ object WebViewHelper {
                         var dialog = dialogs[i];
 
                         // Skip settings or workspace modals with navigation or editors
-                        if (dialog.querySelector('nav') || dialog.querySelector('div[class*="_editorScope"]')) {
+                        if (dialog.querySelector('nav') || dialog.querySelector('div[class*="_editorScope"]') || dialog.getAttribute('data-shortcut-modal') === 'settings' || (dialog.className && dialog.className.indexOf('VOzbGW_panel') !== -1)) {
                             continue;
                         }
 
