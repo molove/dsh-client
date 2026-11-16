@@ -1,0 +1,1 @@
+Fix touch interception bug on text input and microphone caused by broad overlay CSS matching composer overlay anchor.

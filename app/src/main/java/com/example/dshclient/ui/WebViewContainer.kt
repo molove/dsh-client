@@ -46,7 +46,7 @@ object WebViewHelper {
             "#root { position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 100% !important; } " +
             "div[class*=\"_scrollBody\"] { overscroll-behavior: contain !important; -webkit-overflow-scrolling: touch !important; } " +
             "div[class*=\"_frame\"] { height: 100% !important; min-height: 100% !important; } " +
-            "div[class*=\"_overlay\"], div[class*=\"VOzbGW_overlay\"], html:not([data-windows-titlebar]):not([data-platform=\"darwin\"]) div[class*=\"_overlay\"] { " +
+            "div[class*=\"VOzbGW_overlay\"], html:not([data-windows-titlebar]):not([data-platform=\"darwin\"]) div[class*=\"VOzbGW_overlay\"] { " +
             "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: auto !important; height: auto !important; inset: 0 !important; z-index: 1000 !important; display: flex !important; align-items: stretch !important; justify-content: stretch !important; } " +
             "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]):not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) { " +
             "height: min(720px, calc(100% - 32px)) !important; max-height: calc(100% - 32px) !important; " +

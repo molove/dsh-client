@@ -1,6 +1,7 @@
 package com.example.dshclient.ui
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -92,5 +93,13 @@ class WebViewHelperTest {
         assertTrue(WebViewHelper.CSS_INJECTION.contains("button[class*=\"VOzbGW_navCell\"]"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"VOzbGW_options\"]"))
         assertTrue(WebViewHelper.CSS_INJECTION.contains("span[class*=\"VOzbGW_navLabel\"]"))
+    }
+
+    @Test
+    fun testCssInjectionDoesNotContainBroadOverlaySelector() {
+        assertFalse(
+            "CSS injection should not contain generic div[class*=\"_overlay\"] as it intercepts input/mic touches",
+            WebViewHelper.CSS_INJECTION.contains("div[class*=\"_overlay\"]")
+        )
     }
 }
