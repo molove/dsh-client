@@ -19,7 +19,7 @@ class WebViewHelperTest {
     fun testBuildJsInjectionContainsCssAndStyleCreation() {
         val js = WebViewHelper.buildJsInjection()
         assertTrue(js.contains("document.createElement('style')"))
-        assertTrue(js.contains("div[class*=\"_frame\"] { height: 100% !important;"))
+        assertTrue(js.contains("div[class*=\"_frame\"]"))
         assertTrue(js.contains("#root { position: fixed !important;"))
         assertTrue(js.contains("div[class*=\"_dialog\"][aria-label*=\"Workspace\"]"))
         assertTrue(js.contains("div[data-step-process-body]"))
@@ -100,6 +100,22 @@ class WebViewHelperTest {
         assertFalse(
             "CSS injection should not contain generic div[class*=\"_overlay\"] as it intercepts input/mic touches",
             WebViewHelper.CSS_INJECTION.contains("div[class*=\"_overlay\"]")
+        )
+    }
+
+    @Test
+    fun testCssInjectionContainsQuestionComposerRules() {
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_frame\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_card\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_body\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"LVzXQa_frame\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"LVzXQa_card\"]"))
+    }
+
+    @Test
+    fun testCssInjectionDoesNotForceFullHeightOnComposerFrames() {
+        assertTrue(
+            WebViewHelper.CSS_INJECTION.contains("div[class*=\"_frame\"]:not([data-composer-seat] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"])")
         )
     }
 }

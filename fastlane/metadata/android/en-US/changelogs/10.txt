@@ -1,0 +1,1 @@
+Fix question prompt and plan review cards collapsing on mobile screens when agent asks user questions.
