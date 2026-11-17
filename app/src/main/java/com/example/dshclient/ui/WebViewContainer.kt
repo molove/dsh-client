@@ -49,9 +49,9 @@ object WebViewHelper {
             "div[class*=\"Mbwy4a_frame\"], div[class*=\"LVzXQa_frame\"], div[class*=\"XJ7liG_frame\"], [data-composer-seat] div[class*=\"_frame\"] { " +
             "height: auto !important; min-height: auto !important; padding: 6px calc(var(--dsh-composer-side-clearance, 8px) + 8px) 10px !important; } " +
             "div[class*=\"Mbwy4a_card\"], div[class*=\"LVzXQa_card\"], [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_questionTitle\"]), [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_options\"]), [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_strip\"]) { " +
-            "height: auto !important; min-height: min-content !important; max-height: min(75vh, 520px) !important; display: flex !important; flex-direction: column !important; } " +
+            "height: auto !important; min-height: min-content !important; max-height: 520px !important; display: flex !important; flex-direction: column !important; } " +
             "div[class*=\"Mbwy4a_body\"], div[class*=\"LVzXQa_body\"], [data-composer-seat] div[class*=\"_body\"] { " +
-            "min-height: 0 !important; max-height: 50vh !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; } " +
+            "min-height: 0 !important; max-height: 380px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; } " +
             "div[class*=\"VOzbGW_overlay\"], html:not([data-windows-titlebar]):not([data-platform=\"darwin\"]) div[class*=\"VOzbGW_overlay\"] { " +
             "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: auto !important; height: auto !important; inset: 0 !important; z-index: 1000 !important; display: flex !important; align-items: stretch !important; justify-content: stretch !important; } " +
             "div[class*=\"_panel\"]:not([data-sidebar-right-panel]):not([class*=\"P3OORG\"]):not([data-shortcut-modal=\"settings\"]):not([class*=\"VOzbGW_panel\"]) { " +
@@ -123,6 +123,8 @@ object WebViewHelper {
             "position: relative !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; " +
             "width: 100% !important; max-width: 100% !important; height: 100% !important; max-height: 100% !important; " +
             "transform: none !important; box-shadow: none !important; z-index: 10 !important; background: var(--dsw-alias-bg-base, #1e1e1e) !important; } " +
+            "div[class*=\"Mbwy4a_card\"], div[class*=\"LVzXQa_card\"] { max-height: 280px !important; } " +
+            "div[class*=\"Mbwy4a_body\"], div[class*=\"LVzXQa_body\"] { max-height: 180px !important; } " +
             "}"
 
     fun buildUrl(token: String, host: String = DEFAULT_HOST, port: Int = DEFAULT_PORT): String {

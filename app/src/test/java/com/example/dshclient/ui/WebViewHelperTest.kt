@@ -118,4 +118,13 @@ class WebViewHelperTest {
             WebViewHelper.CSS_INJECTION.contains("div[class*=\"_frame\"]:not([data-composer-seat] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"])")
         )
     }
+
+    @Test
+    fun testCssInjectionDoesNotUseVhUnitsInComposerRules() {
+        // vh evaluates to 0px in Android WebView when html has height: 100% and fixed root
+        assertFalse(
+            "Question composer rules must not use vh units",
+            WebViewHelper.CSS_INJECTION.substringAfter("Mbwy4a_card").substringBefore("VOzbGW_overlay").contains("vh")
+        )
+    }
 }
