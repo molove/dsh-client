@@ -105,17 +105,27 @@ class WebViewHelperTest {
 
     @Test
     fun testCssInjectionContainsQuestionComposerRules() {
-        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_frame\"]"))
-        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_card\"]"))
-        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_body\"]"))
-        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"LVzXQa_frame\"]"))
-        assertTrue(WebViewHelper.CSS_INJECTION.contains("div[class*=\"LVzXQa_card\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[class*=\"Mbwy4a_frame\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[class*=\"Mbwy4a_card\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[class*=\"Mbwy4a_body\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[class*=\"LVzXQa_frame\"]"))
+        assertTrue(WebViewHelper.CSS_INJECTION.contains("[class*=\"LVzXQa_card\"]"))
     }
 
     @Test
     fun testCssInjectionDoesNotForceFullHeightOnComposerFrames() {
         assertTrue(
-            WebViewHelper.CSS_INJECTION.contains("div[class*=\"_frame\"]:not([data-composer-seat] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"])")
+            WebViewHelper.CSS_INJECTION.contains("[class*=\"_frame\"]:not([data-composer-seat] *):not([data-question-key] *):not([data-plan-review-key] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"])")
+        )
+    }
+
+    @Test
+    fun testCssInjectionQuestionCardIsTagAgnostic() {
+        // QuestionComposer renders as <section class="Mbwy4a_card">, NOT <div>.
+        // Rule must not restrict to div[...] so that <section> matches properly.
+        assertFalse(
+            "Question card rule must be tag-agnostic and not restricted to div tag",
+            WebViewHelper.CSS_INJECTION.contains("div[class*=\"Mbwy4a_card\"]")
         )
     }
 

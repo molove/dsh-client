@@ -1,0 +1,1 @@
+Fix question and plan review card selectors to be tag-agnostic (<section> elements) so interactive cards expand properly on mobile without height collapse.

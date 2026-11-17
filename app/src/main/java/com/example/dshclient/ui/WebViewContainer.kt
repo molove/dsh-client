@@ -45,12 +45,12 @@ object WebViewHelper {
     const val CSS_INJECTION = "html, body { width: 100% !important; height: 100% !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; overscroll-behavior: none !important; -webkit-overscroll-behavior: none !important; } " +
             "#root { position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: 100% !important; height: 100% !important; } " +
             "div[class*=\"_scrollBody\"] { overscroll-behavior: contain !important; -webkit-overflow-scrolling: touch !important; } " +
-            "div[class*=\"_frame\"]:not([data-composer-seat] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"]) { height: 100% !important; min-height: 100% !important; } " +
-            "div[class*=\"Mbwy4a_frame\"], div[class*=\"LVzXQa_frame\"], div[class*=\"XJ7liG_frame\"], [data-composer-seat] div[class*=\"_frame\"] { " +
+            "[class*=\"_frame\"]:not([data-composer-seat] *):not([data-question-key] *):not([data-plan-review-key] *):not([class*=\"Mbwy4a\"]):not([class*=\"LVzXQa\"]):not([class*=\"XJ7liG\"]) { height: 100% !important; min-height: 100% !important; } " +
+            "[class*=\"Mbwy4a_frame\"], [class*=\"LVzXQa_frame\"], [class*=\"XJ7liG_frame\"], [data-composer-seat] [class*=\"_frame\"] { " +
             "height: auto !important; min-height: auto !important; padding: 6px calc(var(--dsh-composer-side-clearance, 8px) + 8px) 10px !important; } " +
-            "div[class*=\"Mbwy4a_card\"], div[class*=\"LVzXQa_card\"], [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_questionTitle\"]), [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_options\"]), [data-composer-seat] div[class*=\"_card\"]:has(div[class*=\"_strip\"]) { " +
+            "[class*=\"Mbwy4a_card\"], [class*=\"LVzXQa_card\"], [data-composer-seat] [class*=\"_card\"], [data-question-key] [class*=\"_card\"], [data-plan-review-key] [class*=\"_card\"] { " +
             "height: auto !important; min-height: min-content !important; max-height: 520px !important; display: flex !important; flex-direction: column !important; } " +
-            "div[class*=\"Mbwy4a_body\"], div[class*=\"LVzXQa_body\"], [data-composer-seat] div[class*=\"_body\"] { " +
+            "[class*=\"Mbwy4a_body\"], [class*=\"LVzXQa_body\"], [data-composer-seat] [class*=\"_body\"], [data-question-key] [class*=\"_body\"], [data-plan-review-key] [class*=\"_body\"] { " +
             "min-height: 0 !important; max-height: 380px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; } " +
             "div[class*=\"VOzbGW_overlay\"], html:not([data-windows-titlebar]):not([data-platform=\"darwin\"]) div[class*=\"VOzbGW_overlay\"] { " +
             "position: fixed !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; width: auto !important; height: auto !important; inset: 0 !important; z-index: 1000 !important; display: flex !important; align-items: stretch !important; justify-content: stretch !important; } " +
@@ -123,8 +123,8 @@ object WebViewHelper {
             "position: relative !important; top: 0 !important; bottom: 0 !important; left: 0 !important; right: 0 !important; " +
             "width: 100% !important; max-width: 100% !important; height: 100% !important; max-height: 100% !important; " +
             "transform: none !important; box-shadow: none !important; z-index: 10 !important; background: var(--dsw-alias-bg-base, #1e1e1e) !important; } " +
-            "div[class*=\"Mbwy4a_card\"], div[class*=\"LVzXQa_card\"] { max-height: 280px !important; } " +
-            "div[class*=\"Mbwy4a_body\"], div[class*=\"LVzXQa_body\"] { max-height: 180px !important; } " +
+            "[class*=\"Mbwy4a_card\"], [class*=\"LVzXQa_card\"], [data-composer-seat] [class*=\"_card\"], [data-question-key] [class*=\"_card\"] { max-height: 280px !important; } " +
+            "[class*=\"Mbwy4a_body\"], [class*=\"LVzXQa_body\"], [data-composer-seat] [class*=\"_body\"], [data-question-key] [class*=\"_body\"] { max-height: 180px !important; } " +
             "}"
 
     fun buildUrl(token: String, host: String = DEFAULT_HOST, port: Int = DEFAULT_PORT): String {
