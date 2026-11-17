@@ -14,14 +14,14 @@ RepoType: git
 Repo: https://github.com/molove/dsh-client.git
 
 Builds:
-  - versionName: 1.0.11
-    versionCode: 12
-    commit: 9c0ef6398457d0142e1e038e9ed0b48818cf7c7c
+  - versionName: 1.0.12
+    versionCode: 13
+    commit: 920903e13c6b9f9bc5f1aec6c504c7663edca16b
     subdir: app
     gradle:
       - yes
 
 AutoUpdateMode: Version
 UpdateCheckMode: Tags
-CurrentVersion: 1.0.11
-CurrentVersionCode: 12
+CurrentVersion: 1.0.12
+CurrentVersionCode: 13
