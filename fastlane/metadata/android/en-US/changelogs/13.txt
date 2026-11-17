@@ -1,0 +1,1 @@
+Display package name and app version at the bottom of the Settings screen.

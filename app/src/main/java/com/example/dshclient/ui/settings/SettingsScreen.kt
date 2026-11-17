@@ -38,6 +38,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -89,6 +90,23 @@ fun SettingsScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
+    val packageInfo = remember(context) {
+        try {
+            context.packageManager.getPackageInfo(context.packageName, 0)
+        } catch (e: Exception) {
+            null
+        }
+    }
+    val versionName = packageInfo?.versionName ?: "Unknown"
+    @Suppress("DEPRECATION")
+    val versionCode = packageInfo?.let {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            it.longVersionCode
+        } else {
+            it.versionCode.toLong()
+        }
+    } ?: 0L
+
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -122,7 +140,16 @@ fun SettingsScreen(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text("SSH Settings") },
+                title = {
+                    Column {
+                        Text("SSH Settings")
+                        Text(
+                            text = "v$versionName ($versionCode) · ${context.packageName}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f)
+                        )
+                    }
+                },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(
@@ -437,6 +464,23 @@ fun SettingsScreen(
             ) {
                 Text("Save & Connect")
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Remote DSH Web v$versionName ($versionCode)",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = context.packageName,
+                style = MaterialTheme.typography.labelSmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 }
